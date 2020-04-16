@@ -69,4 +69,18 @@ router.get('/logout', cors.corsWithOptions, (req, res) => {
   }
 })
 
+/*
+----------------You can pass token as----------------
+1) In Header as, Authorization - Bearer <access_token>
+2) In Header as, access_token -  <access_token>
+3) In URL as, /facebook/token?access_token=<access_token>
+*/
+router.get('/facebook/token', passport.authenticate('facebook-token'), (req, res) => {
+  if (req.user) {
+    var token = authenticate.getToken({ _id: req.user._id });
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({ success: true, token: token, status: 'You are successfully logged in!' });
+  }
+})
 module.exports = router;

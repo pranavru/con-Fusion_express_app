@@ -89,8 +89,23 @@ favoriteRouter
         res.sendStatus(200);
     })
     .get(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
-        res.statusCode = 403;
-        res.end("GET operation not supported on /favorites/" + req.params.dishId);
+        Favorites.findOne({ user: req.user._id }).then(favorites => {
+            if (!favorites) {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                return res.json({ "exists": false, "favorites": favorites })
+            } else {
+                if (favorites.dishes.indexOf(req.params._id) < 0) {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    return res.json({ "exists": false, "favorites": favorites })
+                } else {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    return res.json({ "exists": true, "favorites": favorites })
+                }
+            }
+        }, err => next(err)).catch(err => next(err));
     })
     .post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
         Favorites.findOne({ user: req.user._id })
@@ -171,30 +186,3 @@ favoriteRouter
     });
 
 module.exports = favoriteRouter;
-
-/*Favorites.find({})
-            .then((favorite) => {
-                console.log(req);
-                if (favorite == null) {
-                    req.body.user = req.user._id;
-                    req.favorite.dish.push({ dishId:req.params.dishId})
-                    favorite.save()
-                        .populate('favorites.dishes', 'favorites.user')
-                        .then(favorite => {
-                            res.statusCode = 200;
-                            res.setHeader('Content-Type', favorite);
-                            res.json(favorite);
-                        })
-                } else {
-                    req.body.user = req.user._id;
-                    req.body.dish.push(req.params.dishId);
-                    console.log(req);
-                    Favorites.create(req.body)
-                        .populate('favorites.dishes', 'favorites.user')
-                        .then(favorite => {
-                            res.statusCode = 200;
-                            res.setHeader('Content-Type', favorite);
-                            res.json(favorite);
-                        }, err => next(err))
-                }
-            }, err => next(err)).catch(err => next(err));*/

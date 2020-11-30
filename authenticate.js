@@ -16,9 +16,12 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 exports.getToken = function (user) {
-    return jwt.sign(user, config.secretKey,
-        { expiresIn: 3600 });
+    return jwt.sign(user, config.secretKey, { expiresIn: 3600 });
 };
+
+// exports.verifyToken = () => {
+//     return jwt.verify(token, config.secretKey, { expiresIn: 3600 })
+// }
 
 var opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
@@ -69,7 +72,7 @@ exports.facebookPassport = passport.use(
                 user.firstname = profile.name.givenName;
                 user.lastname = profile.name.familyName;
                 user.save((err, user) => {
-                    if(err) {
+                    if (err) {
                         return done(err, false);
                     } else {
                         return done(null, user);

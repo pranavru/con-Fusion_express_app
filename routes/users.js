@@ -21,6 +21,7 @@ router.get('/', cors.corsWithOptions, authenticate.verifyUser, authenticate.veri
 });
 
 router.post('/signup', cors.corsWithOptions, (req, res, next) => {
+  console.log(req.body)
   User.register(new User({ username: req.body.username }),
     req.body.password, (err, user) => {
       if (err) {

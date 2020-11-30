@@ -17,6 +17,7 @@ var promoRouter = require('./routes/promoRouter');
 var leaderRouter = require('./routes/leaderRouter');
 var favoriteRouter = require('./routes/favoriteRouter');
 var commentRouter = require('./routes/commentRouter');
+var vuzixMapRouter = require('./routes/vuzixMapRouter');
 const uploadRouter = require('./routes/uploadRouter');
 
 const mongoose = require('mongoose');
@@ -83,6 +84,7 @@ app.use('/promotions', promoRouter);
 app.use('/leaders', leaderRouter);
 app.use('/favorites', favoriteRouter);
 app.use('/comments',commentRouter);
+app.use('/vuzixMap',vuzixMapRouter);
 app.use('/imageUpload', uploadRouter);
 
 // catch 404 and forward to error handler
